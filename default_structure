@@ -80,4 +80,3 @@
     byte  m_spectator_car_index;  // NEW: index of the car being spectated
     byte  m_num_cars;              	// number of cars in data
     byte  m_player_car_index;        	// index of player's car in the array
-    CarUDPData  m_car_data[20];   // data for all cars on track
