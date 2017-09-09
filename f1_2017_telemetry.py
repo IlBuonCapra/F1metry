@@ -27,11 +27,28 @@ while True:
     engineRate = False
     inPit = False
     carPosition = False
+    lapTime = True
 
     if data:
         #print("RICEVENDO DATI")
         while (i <= 60):
             output = struct.unpack('f', data[x:y])
+
+            if lapTime and i == 1:
+                print("TEMPO = ",output[0])
+                time_minutes = int(output[0]//60)
+                time_seconds = int(output[0]-(60*time_minutes))
+                time_milles = '{:03d}'.format(int((output[0]-(time_seconds+(60*time_minutes)))*1000))
+                print(time_minutes,":",time_seconds,":",time_milles)
+
+            if speed and i == 7:  #speed
+                print ("VELOCITA' = ", round(output[0]*mph_to_kmh, 1))
+
+            if throttle and i == 29:    #throttle
+                print ("ACCELERAZIONE = ", output[0]*100)
+
+            if brake and i == 31:   #brake
+                print ("FRENO = ", output[0]*100)
 
             if gear and i == 33:    #gear
                 if output[0] == 0:
@@ -40,23 +57,6 @@ while True:
                     print ("MARCIA = N")
                 else:
                     print ("MARCIA =", int(output[0]-1))
-
-            if speed and i == 7:  #speed
-                print ("VELOCITA' = ", round(output[0]*mph_to_kmh, 1))
-
-            if throttle and i == 29:    #throttle
-                 print ("ACCELERAZIONE = ", output[0]*100)
-
-            if brake and i == 31:   #brake
-                print ("FRENO = ", output[0]*100)
-
-            if drs and i == 42:     #drs
-                if output[0] == 0:
-                    print("DRS CHIUSO")
-                elif output[0] == 1:
-                    print("DRS APERTO")
-                else:
-                    print("DRS STATO SCONOSCIUTO")
 
             if engineRate and i == 37:
                 print("NUMERO DI GIRI = ", round(output[0],2))
@@ -71,6 +71,14 @@ while True:
 
             if carPosition and i == 39:
                 print("POSIZIONE = ",output[0])
+
+            if drs and i == 42:     #drs
+                if output[0] == 0:
+                    print("DRS CHIUSO")
+                elif output[0] == 1:
+                    print("DRS APERTO")
+                else:
+                    print("DRS STATO SCONOSCIUTO")
 
 
 
