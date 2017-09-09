@@ -10,30 +10,73 @@ UDP_PORT = 20777
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.bind((UDP_IP, UDP_PORT))
 
-params = (
-"m_time", "m_lapTime", "m_lapDistance", "m_totalDistance", "m_x", "m_y", "m_z",
-"m_speed", "m_xv", "m_yv", "m_zv","m_xr", "m_yr", "m_zr", "m_xd", "m_yd", "m_zd",
-"m_susp_pos[4]", "m_susp_vel[4]", "m_wheel_speed[4]", "m_throttle", "m_steer", "m_brake",
-"m_clutch", "m_gear", "m_gforce_lat", "m_gforce_lon", "m_lap", "m_engineRate", "m_sli_pro_native_support",
-"m_car_position", "m_kers_level", "m_kers_max_level", "m_drs", "m_traction_control", "m_anti_lock_brakes",
-"m_fuel_in_tank", "m_fuel_capacity", "m_in_pits", "m_sector", "m_sector1_time", "m_sector2_time",
-"m_brakes_temp[4]", "m_wheels_pressure[4]", "m_team_info", "m_total_laps", "m_track_size",
-"m_last_lap_time", "m_max_rpm", "m_idle_rpm", "m_max_gears", "m_sessionType", "m_drsAllowed", "m_track_number",
-"m_vehicleFIAFlags", "m_era", "m_engine_temperature", "m_gforce_vert", "m_ang_vel_x", "m_ang_vel_y", "m_ang_vel_z")
+mph_to_kmh = 2.239*1.60934
 
 while True:
+    data, addr = sock.recvfrom(1237)
+
     i = 0
     x = 0
     y = 4
 
-    data, addr = sock.recvfrom(1237)
-    while (i <= 60):
+    gear = False
+    speed = False
+    throttle = False
+    brake = False
+    drs = False
+    engineRate = False
+    inPit = False
+    carPosition = False
 
-        output = struct.unpack('f', data[x:y])
+    if data:
+        #print("RICEVENDO DATI")
+        while (i <= 60):
+            output = struct.unpack('f', data[x:y])
 
-        if i == 7:  #lapTime
-            print (i, params[i], round(output[0]*2.272, 7))
+            if gear and i == 33:    #gear
+                if output[0] == 0:
+                    print ("MARCIA = R")
+                elif output[0] == 1:
+                    print ("MARCIA = N")
+                else:
+                    print ("MARCIA =", int(output[0]-1))
 
-        i += 1
-        x += 4
-        y += 4
+            if speed and i == 7:  #speed
+                print ("VELOCITA' = ", round(output[0]*mph_to_kmh, 1))
+
+            if throttle and i == 29:    #throttle
+                 print ("ACCELERAZIONE = ", output[0]*100)
+
+            if brake and i == 31:   #brake
+                print ("FRENO = ", output[0]*100)
+
+            if drs and i == 42:     #drs
+                if output[0] == 0:
+                    print("DRS CHIUSO")
+                elif output[0] == 1:
+                    print("DRS APERTO")
+                else:
+                    print("DRS STATO SCONOSCIUTO")
+
+            if engineRate and i == 37:
+                print("NUMERO DI GIRI = ", round(output[0],2))
+
+            if inPit and i == 47:
+                if output[0] == 2:
+                    print("AI BOX")
+                elif output[0] == 1:
+                    print("NELLA PIT LANE")
+                elif output[0] == 0:
+                    print("IN PISTA")
+
+            if carPosition and i == 39:
+                print("POSIZIONE = ",output[0])
+
+
+
+
+            i += 1
+            x += 4
+            y += 4
+
+    # print (i, round(output[0]*2.272, 7))
