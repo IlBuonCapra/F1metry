@@ -44,7 +44,7 @@ tyrePress_r = 0
 tyrePress_f = 0
 totalLaps_value = 0
 trackSize_value = 0
-lasLapTime_value = 0
+lastLapTime_value = 0
 sessionType_value = 0
 trackNumber_value = 0
 flag_value = 0
@@ -72,7 +72,7 @@ tyresPres = False
 teamInfo = False
 totalLaps = False
 trackSize = False
-lastLapTime = True
+lastLapTime = False
 sessionType = False
 trackNumber = False
 flag = False
@@ -149,7 +149,7 @@ while True:
                         print("ENGINE RATE =",engineRate_value)
 
                 if carPosition and i == 39:
-                    carPosition_value = output[0]
+                    carPosition_value = int(output[0])
                     if test:
                         print("CAR POSITION =",carPosition_value)
 
@@ -174,7 +174,7 @@ while True:
                         print("FUEL CAPACITY =",fuelCapacity_value)
 
                 if inPit and i == 47:
-                    inPit_value = inoutput[0]
+                    inPit_value = output[0]
                     if test:
                         if inPit_value == 2:
                             print("AT BOX")
@@ -187,11 +187,11 @@ while True:
                     if i == 48:
                         sector_n = int(output[0] + 1)
                     if i == 49 and output[0]!=0:
-                        sector1 = output[0]
+                        sector1 = '{:.3f}'.format(output[0])
                     if i == 50 and output[0]!=0:
-                        sector2 = output[0]
+                        sector2 = '{:.3f}'.format(output[0])
                     if sector1!=0 and sector2!=0 and lapdistance_value<=100:
-                        sector3 = (lasLapTime_value - sector1) - sector2
+                        sector3 = '{:.3f}'.format((lastLapTime_value - float(sector1)) - float(sector2))
                     if lapdistance_value>600 and lapdistance_value<700:
                         sector1 = 0
                         sector2 = 0
@@ -271,20 +271,20 @@ while True:
                                 print("TEAM = MCLAREN 1991")
 
                 if totalLaps and i == 60:
-                    totalLaps_value = output[0]
+                    totalLaps_value = int(output[0])
                     if test:
                         print("TOTAL LAPS =", totalLaps_value)
 
                 if trackSize and i == 61:
-                    trackSize_value = output[0]
+                    trackSize_value = int(output[0])
                     if test:
                         print("TRACK SIZE =", trackSize_value)
 
                 if lastLapTime and i == 62:
-                    lasLapTime_value = output[0]
-                    lastTime_minutes = int(lasLapTime_value//60)
-                    lastTime_seconds = int(lasLapTime_value-(60*lastTime_minutes))
-                    lastTime_milles = '{:03d}'.format(int((lasLapTime_value-(lastTime_seconds+(lastTime_minutes*60)))*1000))
+                    lastLapTime_value = output[0]
+                    lastTime_minutes = int(lastLapTime_value//60)
+                    lastTime_seconds = int(lastLapTime_value-(60*lastTime_minutes))
+                    lastTime_milles = '{:03d}'.format(int((lastLapTime_value-(lastTime_seconds+(lastTime_minutes*60)))*1000))
                     if test:
                         print(lastTime_minutes,":",lastTime_seconds,":",lastTime_milles)
 
@@ -373,7 +373,7 @@ while True:
                             print("FLAG = UNKNOWN")
 
                 if era and i == 70:
-                    era_value = output[0]
+                    era_value = int(output[0])
                     if test:
                         print("ERA =",era_value)
 
@@ -385,10 +385,10 @@ while True:
                 x += 4
 
 
-            if (i>=73 and i<=94) or i==97 or i==98 or i>=106:
-            #    output = struct.unpack('B', data[x:x+1])
-            #
-            #    print(i,output[0])
+            if (i>=73 and i<=94) or (i==97) or (i==98) or (i>=106):
+                #output = struct.unpack('B', data[x:x+1])
+                #
+                #print(i,output[0])
                 x += 1
 
             i += 1
