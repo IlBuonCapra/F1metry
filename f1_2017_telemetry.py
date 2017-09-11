@@ -14,6 +14,12 @@ test = True
 
 mph_to_kmh = 2.239*1.60934
 
+totalTime_value = 0
+total_minutes = 0
+total_seconds = 0
+total_milles = 0
+time_seconds = 0
+time_milles = 0
 laptime_value = 0
 time_minutes = 0
 time_seconds = 0
@@ -51,6 +57,7 @@ flag_value = 0
 era_value = 0
 engineTemp_value = 0
 
+totalTime = False
 lapTime = False
 lapDistance = False
 totalDistance = False
@@ -83,12 +90,22 @@ while True:
     data, addr = sock.recvfrom(1237)
 
     i = 0
-    x = 0
+    j = 0
+    x = 324
+    y = 0
 
     if data:
-        while (i <= 114):
-            if (i<=72) or (i==96) or (i==102):
+        while (i <= 121):
+            if (i<=71) or (i==100):
                 output = struct.unpack('f', data[x:x+4])
+
+                if totalTime and i == 0:
+                    totalTime_value = output[0]
+                    total_minutes = int(totalTime_value//60)
+                    total_seconds = int(totalTime_value-(60*total_minutes))
+                    total_milles = '{:03d}'.format(int((totalTime_value-(total_seconds+(total_minutes*60)))*1000))
+                    if test:
+                        print(total_minutes,":",total_seconds,":",total_milles)
 
                 if lapTime and i == 1:
                     laptime_value = output[0]
@@ -382,13 +399,58 @@ while True:
                     if test:
                         print("ENGINE TEMP =",engineTemp_value)
 
-                x += 4
+                if i == 100:
+                    print("x=",x,i,output[0])
+
+                #x += 4
 
 
-            if (i>=73 and i<=94) or (i==97) or (i==98) or (i>=106):
-                #output = struct.unpack('B', data[x:x+1])
-                #
+            if (i>=76 and i<=121 and (i!=100 or i!=109)):
+                output = struct.unpack('B', data[x:x+1])
+
+                #tyre temperature
+                #if i>=76 and i<80:
+                    #print(i,output[0])
+
+                #tyre wear
+                #if i>=80 and i<84:
+                    #print(i,output[0])
+
+                #tyre compund
+                #if i==84:
+                    #print(i,output[0])
+
+                #brake bias (bilanciamento frenata)
+                #if i==85:
+                    #print(i,output[0])
+
+                #fuel mix
+                #if i==86:
+                    #print(i,output[0])
+
+                #current lap valid
+                #if i==87:
+                    #print(i,output[0])
+
+                #front wing damage
+                #if i==92 or i==93:
+                    #print(i,output[0])
+
+                #rear wing damage
+                #if i==94:
+                    #print(i,output[0])
+
+                #engine damage
+                #if i==95:
+                    #print(i,output[0])
+
+                #gear box damage
+                #if i==96:
+                    #print(i,output[0])
+
+
                 #print(i,output[0])
                 x += 1
+
 
             i += 1

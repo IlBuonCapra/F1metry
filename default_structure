@@ -1,3 +1,4 @@
+0     *float m_time;                      //
 1     *float m_lapTime;                   //
 2     *float m_lapDistance;               //
 3     *float m_totalDistance;             //
@@ -27,27 +28,17 @@
 70    *float m_era;                       // era, 2017 (modern) or 1980 (classic)
 71    *float m_engine_temperature;        // engine temperature (centigrade)
 -------------------------------------------------------------------------------------------------------------------------------------
-73     byte  m_tyres_temperature[4];	    // tyres temperature (centigrade) RL, RR, FL, FR
-77     byte  m_tyres_wear[4];	            // tyre wear percentage RL, RR, FL, FR
-81     byte  m_tyre_compound;	            // compound of tyre – 0 = ultra soft, 1 = super soft, 2 = soft, 3 = medium, 4 = hard, 5 = inter, 6 = wet
-82     byte  m_front_brake_bias;          // front brake bias (percentage)
-83     byte  m_fuel_mix;                  // fuel mix - 0 = lean, 1 = standard, 2 = rich, 3 = max
-84     byte  m_currentLapInvalid;    	    // current lap invalid - 0 = valid, 1 = invalid
-85     byte  m_tyres_damage[4];	          // tyre damage (percentage) RL, RR, FL, FR
-89     byte  m_front_left_wing_damage;	  // front left wing damage (percentage)
-90     byte  m_front_right_wing_damage;   // front right wing damage (percentage)
-91     byte  m_rear_wing_damage;	        // rear wing damage (percentage)
-92     byte  m_engine_damage;	            // engine damage (percentage)
-93     byte  m_gear_box_damage;	          // gear box damage (percentage)
-94     byte  m_exhaust_damage;	          // exhaust damage (percentage)
+76     byte  m_tyres_temperature[4];	    // tyres temperature (centigrade) RL, RR, FL, FR
+80     byte  m_tyres_wear[4];	            // tyre wear percentage RL, RR, FL, FR
+84     byte  m_tyre_compound;	            // compound of tyre – 0 = ultra soft, 1 = super soft, 2 = soft, 3 = medium, 4 = hard, 5 = inter, 6 = wet
+85     byte  m_front_brake_bias;          // front brake bias (percentage)
+86     byte  m_fuel_mix;                  // fuel mix - 0 = lean, 1 = standard, 2 = rich, 3 = max
+87     byte  m_currentLapInvalid;    	    // current lap invalid - 0 = valid, 1 = invalid
+92     byte  m_front_left_wing_damage;	  // front left wing damage (percentage)
+93     byte  m_front_right_wing_damage;   // front right wing damage (percentage)
+94     byte  m_rear_wing_damage;	        // rear wing damage (percentage)
+95     byte  m_engine_damage;	            // engine damage (percentage)
+96     byte  m_gear_box_damage;	          // gear box damage (percentage)
+97    ?byte  m_exhaust_damage;	          // exhaust damage (percentage)
 
-96     float m_session_time_left;         // NEW: time left in session in seconds
-
-97     byte  m_num_cars;              	  // number of cars in data
-98     byte  m_player_car_index;        	// index of player's car in the array
-
-102    float m_bestLapTime;               //
-
-106   @byte  m_driverId;                  //
-107   @byte  m_teamId;                    //
-114    byte  m_penalties;                 // NEW: accumulated time penalties in seconds to be added
+100     float m_session_time_left;         // NEW: time left in session in seconds
