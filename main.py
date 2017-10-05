@@ -1,6 +1,7 @@
 #http://forums.codemasters.com/discussion/53139/f1-2017-d-box-and-udp-output-specification/
 #http://forums.codemasters.com/discussion/46726/d-box-and-udp-telemetry-information
 
+from tkinter import *
 import socket
 import struct
 
@@ -10,234 +11,165 @@ UDP_PORT = 20777
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.bind((UDP_IP, UDP_PORT))
 
-test = True
-
 mph_to_kmh = 2.239*1.60934
 
-totalTime_value = 0
-total_minutes = 0
-total_seconds = 0
-total_milles = 0
-time_seconds = 0
-time_milles = 0
-laptime_value = 0
-time_minutes = 0
-time_seconds = 0
-time_milles = 0
-lapdistance_value = 0
-totaldistance_value = 0
-speed_value = 0
-throttle_value = 0
-steer_value = 0
-brake_value = 0
-gear_value = 0
-lap_value = 0
-engineRate_value = 0
-carPosition_value = 0
-drs_value = 0
-fuelInTank_value = 0
-fuelCapacity_value = 0
-inPit_value = 0
-sector_n = 0
-sector1 = 0
-sector2 = 0
-sector3 = 0
-brakesTemp_rl = 0
-brakesTemp_rr = 0
-brakesTemp_fl = 0
-brakesTemp_fr = 0
-tyrePress_r = 0
-tyrePress_f = 0
-totalLaps_value = 0
-trackSize_value = 0
-lastLapTime_value = 0
-sessionType_value = 0
-trackNumber_value = 0
-flag_value = 0
-era_value = 0
-engineTemp_value = 0
+dict = {
+    'globalTime' : '0',
+    'globalTime_minutes' : '0',
+    'globalTime_seconds' : '0',
+    'globalTime_milles' : '0',
+    'lapTime' : '0',
+    'lapTime_minutes' : '0',
+    'lapTime_seconds' : '0',
+    'lapTime_milles' : '0',
+    'lapDistance' : '0',
+    'speed' : '0',
+    'throttle' : '0',
+    'steer' : '0',
+    'brake' : '0',
+    'gear' : '0',
+    'lap' : '0',
+    'engineRate' : '0',
+    'carPosition' : '0',
+    'drs' : '0',
+    'fuelInTank' : '0',
+    'fuelCapacity' : '0',
+    'inPit' : '0',
+    'sector' : '0',
+    'sector1' : '0',
+    'sector2' : '0',
+    'sector3' : '0',
+    'brakesTemp_rl' : '0',
+    'brakesTemp_rr' : '0',
+    'brakesTemp_fl' : '0',
+    'brakesTemp_fr' : '0',
+    'tyrePress_r' : '0',
+    'tyrePress_f' : '0',
+    'totalLaps' : '0',
+    'trackSize' : '0',
+    'lastLapTime' : '0',
+    'lastLapTime_minutes' : '0',
+    'lastLapTime_seconds' : '0',
+    'lastLapTime_milles' : '0',
+    'sessionType' : '0',
+    'trackNumber' : '0',
+    'flag' : '0',
+    'era' : '0',
+    'engineTemp' : '0'
+}
 
-totalTime = False
-lapTime = False
-lapDistance = False
-totalDistance = False
-speed = False
-throttle = False
-steer = False
-brake = False
-gear = False
-lap = False
-engineRate = False
-carPosition = False
-drs = False
-fuelInTank = False
-fuelCapacity = False
-inPit = False
-sector = False
-brakesTemp = False
-tyresPres = False
-teamInfo = False
-totalLaps = False
-trackSize = False
-lastLapTime = False
-sessionType = False
-trackNumber = False
-flag = False
-era = False
-engineTemp = False
+
 
 while True:
+    gui = Tk()
+    gui.title("F1Telemetry")
+    gui.geometry("300x200")
+    var = StringVar()
+    var.set(dict['speed'])
+    label_speed = Label(gui,textvariable=var).pack()
+
+    print(dict['speed'])
     data, addr = sock.recvfrom(1237)
 
     i = 0
-    j = 0
-    x = 324
-    y = 0
+    x = 0
 
     if data:
         while (i <= 121):
-            if (i<=71) or (i==100):
+            if (i<=71):
                 output = struct.unpack('f', data[x:x+4])
 
-                if totalTime and i == 0:
-                    totalTime_value = output[0]
-                    total_minutes = int(totalTime_value//60)
-                    total_seconds = int(totalTime_value-(60*total_minutes))
-                    total_milles = '{:03d}'.format(int((totalTime_value-(total_seconds+(total_minutes*60)))*1000))
-                    if test:
-                        print(total_minutes,":",total_seconds,":",total_milles)
+                #global Time
+                if i == 0:
+                    dict['globalTime'] = output[0]
+                    dict['globalTime_minutes'] = int(dict['globalTime']//60)
+                    dict['globalTime_seconds'] = int(dict['globalTime']-(60*dict['globalTime_minutes']))
+                    dict['globalTime_milles'] = '{:03d}'.format(int((dict['globalTime']-(dict['globalTime_seconds']+(dict['globalTime_minutes']*60)))*1000))
 
-                if lapTime and i == 1:
-                    laptime_value = output[0]
-                    time_minutes = int(laptime_value//60)
-                    time_seconds = int(laptime_value-(60*time_minutes))
-                    time_milles = '{:03d}'.format(int((laptime_value-(time_seconds+(time_minutes*60)))*1000))
-                    if test:
-                        print(time_minutes,":",time_seconds,":",time_milles)
+                #current lap Time
+                if i == 1:
+                    dict['lapTime'] = output[0]
+                    dict['lapTime_minutes'] = int(dict['lapTime']//60)
+                    dict['lapTime_seconds'] = int(dict['lapTime']-(60*dict['lapTime_minutes']))
+                    dict['lapTime_milles'] = '{:03d}'.format(int((dict['lapTime']-(dict['lapTime_seconds']+(dict['lapTime_minutes']*60)))*1000))
 
-                if lapDistance and i == 2:
-                    lapdistance_value = output[0]
-                    if test:
-                        print("DISTANCE CURRENT LAP =", lapdistance_value)
+                #distance of the current Lap
+                if i == 2:
+                    dict['lapDistance'] = int(output[0])
 
-                if totalDistance and i == 3:
-                    totaldistance_value = output[0]
-                    if test:
-                        print("TOTAL DISTANCE =",totaldistance_value)
+                #current speed
+                if i == 7:
+                    dict['speed'] = int(output[0]*mph_to_kmh)
 
-                if speed and i == 7:
-                    speed_value = int(output[0]*mph_to_kmh)
-                    if test:
-                        print ("SPEED' =",speed_value)
+                #current throttle in percentage
+                if i == 29:
+                    dict['throttle'] = int(output[0]*100)
 
-                if throttle and i == 29:
-                    throttle_value = int(output[0]*100)
-                    if test:
-                        print ("THROTTLE =",throttle_value)
+                #current steer (-99=left, 0=center, 100=right)
+                if i == 30:
+                    dict['steer'] = int(output[0]*100)
 
-                if steer and i == 30:
-                    steer_value = int(output[0]*100)
-                    if test:
-                        print("STEER =",steer_value)
+                #current bracke in percentage
+                if i == 31:
+                    dict['brake'] = int(output[0]*100)
 
-                if brake and i == 31:
-                    brake_value = int(output[0]*100)
-                    if test:
-                        print ("BRAKE =",brake_value)
+                #current gear (0=R, 1=N, 2=1...)
+                if i == 33:
+                    dict['gear'] = int(output[0])
 
-                if gear and i == 33:
-                    gear_value = int(output[0])
-                    if test:
-                        if gear_value == 0:
-                            print ("GEAR = R")
-                        elif gear_value == 1:
-                            print ("GEAR = N")
-                        else:
-                            print ("GEAR =", int(output[0]-1))
+                #current lap
+                if i == 36:
+                    dict['lap'] = int(output[0]+1)
 
-                if lap and i == 36:
-                    lap_value = int(output[0]+1)
-                    if test:
-                        print("CURRENT LAP NUMBER =",lap_value)
+                #current engine Rate
+                if i == 37:
+                    dict['engineRate'] = int(output[0])
 
-                if engineRate and i == 37:
-                    engineRate_value = int(output[0])
-                    if test:
-                        print("ENGINE RATE =",engineRate_value)
+                #current car position
+                if i == 39:
+                    dict['carPosition'] = int(output[0])
 
-                if carPosition and i == 39:
-                    carPosition_value = int(output[0])
-                    if test:
-                        print("CAR POSITION =",carPosition_value)
+                if i == 42:
+                    dict['drs'] = output[0]
 
-                if drs and i == 42:
-                    drs_value = output[0]
-                    if test:
-                        if drs_value == 0:
-                            print("DRS CLOSE")
-                        elif drs_value == 1:
-                            print("DRS OPEN")
-                        else:
-                            print("DRS UNKNOWN")
+                if i == 45:
+                    dict['fuelInTank'] = output[0]
 
-                if fuelInTank and i == 45:
-                    fuelInTank_value = output[0]
-                    if test:
-                        print("FUEL IN TANK =",fuelInTank_value)
+                if i == 46:
+                    dict['fuelCapacity'] = output[0]
 
-                if fuelCapacity and i == 46:
-                    fuelCapacity_value = output[0]
-                    if test:
-                        print("FUEL CAPACITY =",fuelCapacity_value)
+                if i == 47:
+                    dict['inPit'] = output[0]
 
-                if inPit and i == 47:
-                    inPit_value = output[0]
-                    if test:
-                        if inPit_value == 2:
-                            print("AT BOX")
-                        elif inPit_value == 1:
-                            print("IN PIT LANE")
-                        elif inPit_value == 0:
-                            print("IN TRACK")
+                if i == 48:
+                    dict['sector'] = int(output[0] + 1)
 
-                if sector:
-                    if i == 48:
-                        sector_n = int(output[0] + 1)
-                    if i == 49 and output[0]!=0:
-                        sector1 = '{:.3f}'.format(output[0])
-                    if i == 50 and output[0]!=0:
-                        sector2 = '{:.3f}'.format(output[0])
-                    if sector1!=0 and sector2!=0 and lapdistance_value<=100:
-                        sector3 = '{:.3f}'.format((lastLapTime_value - float(sector1)) - float(sector2))
-                    if lapdistance_value>600 and lapdistance_value<700:
-                        sector1 = 0
-                        sector2 = 0
-                        sector3 = 0
-                    if test:
-                        print("SECTOR NUMBER =",sector_n,"SECTOR1 =",sector1,"SECTOR2 =",sector2,"SECTOR3 =",sector3)
+                if i == 49 and output[0]!=0:
+                    dict['sector1'] = '{:.3f}'.format(output[0])
 
-                if brakesTemp:
-                    if i == 51:
-                        brakesTemp_rl = '{:06.2f}'.format(output[0])
-                    if i == 52:
-                        brakesTemp_rr = '{:06.2f}'.format(output[0])
-                    if i == 53:
-                        brakesTemp_fl = '{:06.2f}'.format(output[0])
-                    if i == 54:
-                        brakesTemp_fr = '{:06.2f}'.format(output[0])
-                    if test:
-                        print("BRAKE TEMP RL =",brakesTemp_rl,"BRAKE TEMP RR =",brakesTemp_rr,"BRAKE TEMP FL =",brakesTemp_fl,"BRAKE TEMP FR =",brakesTemp_fr)
+                if i == 50 and output[0]!=0:
+                    dict['sector2'] = '{:.3f}'.format(output[0])
 
-                if tyresPres:
-                    if i == 56:
-                        tyrePress_r = output[0]
-                    if i == 57:
-                        tyrePress_f = output[0]
-                    if test:
-                        print("PRES REAR =",tyrePress_r,"PRES FRONT =",tyrePress_f)
+                #if int(dict['sector1'])!=0 and int(dict['sector2'])!=0 and int(dict['lapDistance'])<=100:
+                    #dict['sector3'] = '{:.3f}'.format(float(dict['lastLapTime']) - float(dict['sector1']) - float(dict['sector2']))
+
+                if i == 51:
+                    dict['brakesTemp_rl'] = '{:06.2f}'.format(output[0])
+                if i == 52:
+                    dict['brakesTemp_rr'] = '{:06.2f}'.format(output[0])
+                if i == 53:
+                    dict['brakesTemp_fl'] = '{:06.2f}'.format(output[0])
+                if i == 54:
+                    dict['brakesTemp_fr'] = '{:06.2f}'.format(output[0])
+
+                if i == 56:
+                    dict['tyrePress_r'] = output[0]
+                if i == 57:
+                    dict['tyrePress_f'] = output[0]
 
                 #DA MODIFICARE
-                if teamInfo and i == 59:
+                '''if i == 59:
+                    dict['teaminfo_value']
                     teaminfo_value = output[0]
                     if test:
                         if era == 0:
@@ -285,172 +217,83 @@ while True:
                             if teaminfo_value == 11:
                                 print("TEAM = REDBULL 2010")
                             if teaminfo_value == 12:
-                                print("TEAM = MCLAREN 1991")
+                                print("TEAM = MCLAREN 1991")'''
 
-                if totalLaps and i == 60:
-                    totalLaps_value = int(output[0])
-                    if test:
-                        print("TOTAL LAPS =", totalLaps_value)
+                if i == 60:
+                    dict['totalLaps'] = int(output[0])
 
-                if trackSize and i == 61:
-                    trackSize_value = int(output[0])
-                    if test:
-                        print("TRACK SIZE =", trackSize_value)
+                if i == 61:
+                    dict['trackSize'] = int(output[0])
 
-                if lastLapTime and i == 62:
-                    lastLapTime_value = output[0]
-                    lastTime_minutes = int(lastLapTime_value//60)
-                    lastTime_seconds = int(lastLapTime_value-(60*lastTime_minutes))
-                    lastTime_milles = '{:03d}'.format(int((lastLapTime_value-(lastTime_seconds+(lastTime_minutes*60)))*1000))
-                    if test:
-                        print(lastTime_minutes,":",lastTime_seconds,":",lastTime_milles)
+                if i == 62:
+                    dict['lastLapTime'] = output[0]
+                    dict['lastLapTime_minutes'] = int(dict['lastLapTime']//60)
+                    dict['lastLApTime_seconds'] = int(dict['lastLapTime']-(60*dict['lastLapTime_minutes']))
+                    dict['lastLApTime_milles'] = '{:03d}'.format(int((dict['lastLapTime']-(dict['lastLApTime_seconds']+(dict['lastLapTime_minutes']*60)))*1000))
 
-                if sessionType and i == 66:
-                    sessionType_value = output[0]
-                    if test:
-                        if sessionType_value == 0:
-                            print("SESSION TYPE = UNKNOWN")
-                        if sessionType_value == 1:
-                            print("SESSION TYPE = PRACTICE")
-                        if sessionType_value == 2:
-                            print("SESSION TYPE = QUALIFYING")
-                        if sessionType_value == 3:
-                            print("SESSION TYPE = RACE")
+                if i == 66:
+                    dict['sessionType'] = output[0]
 
-                if trackNumber and i == 68:
-                    trackNumber_value = output[0]
-                    if test:
-                        if trackNumber_value == 0:
-                            print("TRACK = MELBOURNE")
-                        elif trackNumber_value == 1:
-                            print("TRACK = SEPANG")
-                        elif trackNumber_value == 2:
-                            print("TRACK = SHANGHAI")
-                        elif trackNumber_value == 3:
-                            print("TRACK = BAHRAIN")
-                        elif trackNumber_value == 4:
-                            print("TRACK = CATALUNYA")
-                        elif trackNumber_value == 5:
-                            print("TRACK = MONACO")
-                        elif trackNumber_value == 6:
-                            print("TRACK = MONTREAL")
-                        elif trackNumber_value == 7:
-                            print("TRACK = SILVERSTONE")
-                        elif trackNumber_value == 8:
-                            print("TRACK = HOCKENHEIM")
-                        elif trackNumber_value == 9:
-                            print("TRACK = HUNGAROING")
-                        elif trackNumber_value == 10:
-                            print("TRACK = SPA")
-                        elif trackNumber_value == 11:
-                            print("TRACK = MONZA")
-                        elif trackNumber_value == 12:
-                            print("TRACK = SINGAPORE")
-                        elif trackNumber_value == 13:
-                            print("TRACK = SUZUKA")
-                        elif trackNumber_value == 14:
-                            print("TRACK = ABU DHABI")
-                        elif trackNumber_value == 15:
-                            print("TRACK = TEXAS")
-                        elif trackNumber_value == 16:
-                            print("TRACK = BRAZIL")
-                        elif trackNumber_value == 17:
-                            print("TRACK = AUSTRIA")
-                        elif trackNumber_value == 18:
-                            print("TRACK = SOCHI")
-                        elif trackNumber_value == 19:
-                            print("TRACK = MEXICO")
-                        elif trackNumber_value == 20:
-                            print("TRACK = BAKU")
-                        elif trackNumber_value == 21:
-                            print("TRACK = SAKHIR (SHORT)")
-                        elif trackNumber_value == 22:
-                            print("TRACK = SILVERSTONE (SHORT)")
-                        elif trackNumber_value == 23:
-                            print("TRACK = TEXAS (SHORT)")
-                        elif trackNumber_value == 24:
-                            print("TRACK = SUZUKA (SHORT)")
-                        else:
-                            print("TRACK = UNKNOWN")
+                if i == 68:
+                    dict['trackNumber'] = output[0]
 
-                if flag and i == 69:
-                    flag_value = output[0]
-                    if test:
-                        if flag_value == 0:
-                            print("FLAG = NONE")
-                        elif flag_value == 1:
-                            print("FLAG = GREEN")
-                        elif flag_value == 2:
-                            print("FLAG = BLUE")
-                        elif flag_value == 3:
-                            print("FLAG = YELLOW")
-                        elif flag_value == 4:
-                            print("FLAG = RED")
-                        else:
-                            print("FLAG = UNKNOWN")
+                if i == 69:
+                    dict['flag'] = output[0]
 
-                if era and i == 70:
-                    era_value = int(output[0])
-                    if test:
-                        print("ERA =",era_value)
+                if i == 70:
+                    dict['era'] = int(output[0])
 
-                if engineTemp and i == 71:
-                    engineTemp_value = '{:06.2f}'.format(output[0])
-                    if test:
-                        print("ENGINE TEMP =",engineTemp_value)
+                if i == 71:
+                    dict['engineTemp'] = '{:06.2f}'.format(output[0])
 
-                if i == 100:
-                    print("x=",x,i,output[0])
-
-                #x += 4
+                x += 4
 
 
-            if (i>=76 and i<=121 and (i!=100 or i!=109)):
+            '''if (i>=76 and i<=121 and (i!=100 or i!=109)):
                 output = struct.unpack('B', data[x:x+1])
 
                 #tyre temperature
-                #if i>=76 and i<80:
-                    #print(i,output[0])
+                if i>=76 and i<80:
+                    print(i,output[0])
 
                 #tyre wear
-                #if i>=80 and i<84:
-                    #print(i,output[0])
+                if i>=80 and i<84:
+                    print(i,output[0])
 
                 #tyre compund
-                #if i==84:
-                    #print(i,output[0])
+                if i==84:
+                    print(i,output[0])
 
                 #brake bias (bilanciamento frenata)
-                #if i==85:
-                    #print(i,output[0])
+                if i==85:
+                    print(i,output[0])
 
                 #fuel mix
-                #if i==86:
-                    #print(i,output[0])
+                if i==86:
+                    print(i,output[0])
 
                 #current lap valid
-                #if i==87:
-                    #print(i,output[0])
+                if i==87:
+                    print(i,output[0])
 
                 #front wing damage
-                #if i==92 or i==93:
-                    #print(i,output[0])
+                if i==92 or i==93:
+                    print(i,output[0])
 
                 #rear wing damage
-                #if i==94:
-                    #print(i,output[0])
+                if i==94:
+                    print(i,output[0])
 
                 #engine damage
-                #if i==95:
-                    #print(i,output[0])
+                if i==95:
+                    print(i,output[0])
 
                 #gear box damage
-                #if i==96:
-                    #print(i,output[0])
+                if i==96:
+                    print(i,output[0])
 
-
-                #print(i,output[0])
-                x += 1
-
+                print(i,output[0])'''
 
             i += 1
+
+    gui.mainloop()
