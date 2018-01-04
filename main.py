@@ -21,19 +21,31 @@ def create_dictionaries():
     global game_values, index_converter
 
     game_values = {
-        'globalTime' : tk.StringVar(),
+        'totalTime' : tk.StringVar(),
         'lapTime' : tk.StringVar(),
         'lapDistance' : tk.StringVar(),
-        'globalDistance' : tk.StringVar(),
+        'totalDistance' : tk.StringVar(),
         'speed' : tk.StringVar(),
+        'wheelSpeed_rl' : tk.StringVar(),
+        'wheelSpeed_rr' : tk.StringVar(),
+        'wheelSpeed_fl' : tk.StringVar(),
+        'wheelSpeed_fr' : tk.StringVar(),
         'throttle' : tk.StringVar(),
         'steer' : tk.StringVar(),
         'brake' : tk.StringVar(),
+        'clutch' : tk.StringVar(),
         'gear' : tk.StringVar(),
+        'gforceLat' : tk.StringVar(),
+        'gforceLon' : tk.StringVar(),
         'lap' : tk.StringVar(),
         'engineRate' : tk.StringVar(),
+        'sliProNativeSupport' : tk.StringVar(),
         'carPosition' : tk.StringVar(),
+        'kersLevel' : tk.StringVar(),
+        'kersMaxLevel' : tk.StringVar(),
         'drs' : tk.StringVar(),
+        'tractionControl' : tk.StringVar(),
+        'antiLockBrakes' : tk.StringVar(),
         'fuelInTank' : tk.StringVar(),
         'fuelCapacity' : tk.StringVar(),
         'inPit' : tk.StringVar(),
@@ -45,17 +57,23 @@ def create_dictionaries():
         'brakesTemp_fl' : tk.StringVar(),
         'brakesTemp_fr' : tk.StringVar(),
         'tyrePress_rl' : tk.StringVar(),
-        'typePress_rr' : tk.StringVar(),
+        'tyrePress_rr' : tk.StringVar(),
         'tyrePress_fl' : tk.StringVar(),
         'tyrePress_fr' : tk.StringVar(),
+        'teamInfo' : tk.StringVar(),
         'totalLaps' : tk.StringVar(),
         'trackSize' : tk.StringVar(),
         'lastLapTime' : tk.StringVar(),
+        'maxRpm' : tk.StringVar(),
+        'idleRpm' : tk.StringVar(),
+        'maxGears' : tk.StringVar(),
         'sessionType' : tk.StringVar(),
+        'drsAllowed' : tk.StringVar(),
         'trackNumber' : tk.StringVar(),
         'flag' : tk.StringVar(),
         'era' : tk.StringVar(),
-        'engineTemp' : tk.StringVar()
+        'engineTemp' : tk.StringVar(),
+        'gforceVert' : tk.StringVar(),
     }
 
     index_converter = {
@@ -63,12 +81,12 @@ def create_dictionaries():
         for key, value in zip(
             game_values.keys(),
             [
-             0, 1, 2, 3, 7, 29, 30,
-             31, 33, 36, 37, 39, 42,
-             45, 46, 47, 48, 49, 50,
-             51, 52, 53, 54, 55, 56,
-             57, 58, 60, 61, 62, 66,
-             68, 69, 70, 71
+             0,  1,  2,  3,  7,  25, 26, 27, 28,
+             29, 30, 31, 32, 33, 34, 35, 36, 37,
+             38, 39, 40, 41, 42, 43, 44, 45, 46,
+             47, 48, 49, 50, 51, 52, 53, 54, 55,
+             56, 57, 58, 59, 60, 61, 62, 63, 64,
+             65, 66, 67, 68, 69, 70, 71, 72
             ]
         )
     }
